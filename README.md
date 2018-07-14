@@ -35,8 +35,8 @@ Open cloned repository directory, or `App Menu > Clone Repository`.
 
 includes:
 
-* vala beautifer compatible with [vala-lint](https://github.com/elementary/vala-lint) 
-* default flatpak config.
+* vala beautifer (compatible with [vala-lint](https://github.com/elementary/vala-lint))
+* default flatpak config (for optional flatpak distribution)
 
 
 ## Screenshot
