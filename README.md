@@ -1,7 +1,7 @@
 hello-elementary
 ----------------
 
-Quick start elementary OS application. Check [official docs](https://elementary.io/bs/docs/code/getting-started) for more about building for elementary OS.
+Quick start elementary OS application. Check [official docs](https://elementary.io/en/docs/code/getting-started) for more about building for elementary OS.
 
 
 ## Prerequisite
