@@ -1,6 +1,7 @@
 sources += [
     'main.vala',
     'window.vala',
+    'app_entry.vala',
 ]
 
 

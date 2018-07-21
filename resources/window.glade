@@ -17,9 +17,7 @@
   </object>
   <template class="MyAppWindow" parent="GtkApplicationWindow">
     <property name="can_focus">False</property>
-    <property name="modal">True</property>
     <property name="window_position">center</property>
-    <property name="default_width">840</property>
     <property name="default_height">500</property>
     <property name="icon_name">start-here</property>
     <property name="skip_taskbar_hint">True</property>
@@ -30,9 +28,8 @@
         <property name="name">scrolledwindow</property>
         <property name="visible">True</property>
         <property name="can_focus">True</property>
+        <property name="hscrollbar_policy">never</property>
         <property name="shadow_type">in</property>
-        <property name="max_content_width">100</property>
-        <property name="max_content_height">100</property>
         <property name="propagate_natural_width">True</property>
         <property name="propagate_natural_height">True</property>
         <child>
@@ -43,8 +40,7 @@
               <object class="GtkGrid" id="application_grid">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="row_spacing">1</property>
-                <property name="column_spacing">1</property>
+                <property name="row_spacing">20</property>
                 <property name="row_homogeneous">True</property>
                 <property name="column_homogeneous">True</property>
                 <child>
