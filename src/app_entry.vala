@@ -40,6 +40,11 @@ class AppEntry {
         get { return exec; }
     }
 
+    private string comment;
+    public string app_comment {
+        get {return comment;}
+    }
+
     private string desktop_file;
 
     public AppEntry (string desktop_file) throws KeyFileError, FileError {
@@ -59,6 +64,7 @@ class AppEntry {
         name = file.get_string ("Desktop Entry", "Name");
         icon = file.get_string ("Desktop Entry", "Icon");
         exec = file.get_string ("Desktop Entry", "Exec");
+        comment = file.get_string ("Desktop Entry", "Comment");
 
         create_button ();
     }

@@ -34,6 +34,7 @@ public class MyAppWindow: Gtk.ApplicationWindow {
     Gtk.SearchEntry search_apps;
 
     AppEntry[] applications;
+    private AppEntry selectedApp;
 
     private Gtk.Application app;
 
@@ -55,6 +56,12 @@ public class MyAppWindow: Gtk.ApplicationWindow {
     private bool exit_on_esc (Gdk.EventKey e) {
         if (e.keyval == Gdk.Key.Escape) {
             app_quit ();
+            return true;
+        }
+        if (e.keyval == Gdk.Key.Return) {
+            if (selectedApp != null) {
+                selectedApp.app_button.clicked ();
+            }
             return true;
         }
         return false;
@@ -92,15 +99,20 @@ public class MyAppWindow: Gtk.ApplicationWindow {
         application_grid.forall ((element) => application_grid.remove (element));
 
         int count = 0;
+        selectedApp = null;
         for (int i = 0; i < applications.length; i++) {
             var app = applications[i];
             if (filter != null) {
-                if (!app.app_name.down ().contains (filter.down ())) {
+                if (!app.app_name.down ().contains (filter.down ())
+                    && !app.app_comment.down ().contains (filter.down ())) {
                     continue;
                 }
             }
             application_grid.attach (app.app_button, count % 3, count / 3);
             count++;
+            if (count == 1) {
+                selectedApp = app;
+            }
         }
 
         // 12 is a decent list for the view
