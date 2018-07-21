@@ -76,6 +76,10 @@ class AppEntry {
         button.set_image_position (Gtk.PositionType.TOP);
         button.relief = Gtk.ReliefStyle.NONE;
         button.always_show_image = true;
+        button.clicked.connect (() => {
+            instance.hide ();
+            launch_app (exec);
+        });
         button.show ();
     }
 
@@ -84,7 +88,7 @@ class AppEntry {
     }
 }
 
-static AppEntry[] get_desktop_files (string[] dirs) {
+static AppEntry[] get_application_buttons (string[] dirs) {
     AppEntry[] apps = new AppEntry[] {};
 
     foreach (string dir in dirs) {
@@ -100,7 +104,7 @@ static AppEntry[] get_desktop_files (string[] dirs) {
                     continue;
                 }
 
-                AppEntry app_entry = get_appentry (d.get_path(), filename);
+                AppEntry app_entry = get_appentry (d.get_path (), filename);
                 if (app_entry != null) {
                     apps += app_entry;
                 }
@@ -122,4 +126,29 @@ private static AppEntry get_appentry (string dir, string filename) {
         stderr.printf ("%s - %s\n", filename, e.message);
     }
     return app_entry;
+}
+
+static void launch_app (string exec) {
+    MainLoop loop = new MainLoop ();
+
+    try{
+        Pid child_pid;
+        Process.spawn_async (null,
+                             new string[] { "sh", "-c", exec },
+                             Environ.get (),
+                             SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD
+                             | SpawnFlags.STDOUT_TO_DEV_NULL | SpawnFlags.STDERR_TO_DEV_NULL,
+                             null,
+                             out child_pid);
+
+        ChildWatch.add (child_pid, (pid, status) => {
+            Process.close_pid (pid);
+            loop.quit ();
+            instance.app_quit ();
+        });
+
+        loop.run ();
+    } catch (Error e) {
+        stderr.printf ("%s\n", e.message);
+    }
 }

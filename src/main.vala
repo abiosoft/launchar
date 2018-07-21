@@ -25,11 +25,10 @@ int main (string[] args) {
     app.activate.connect (() => {
         var win = app.active_window;
         if (win == null) {
-            win = new MyAppWindow (app);
+            win = (instance = new MyAppWindow (app));
         }
         win.present ();
     });
-
 
     return app.run (args);
 }

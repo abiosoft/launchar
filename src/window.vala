@@ -53,18 +53,21 @@ public class MyAppWindow: Gtk.ApplicationWindow {
     }
 
     private bool exit_on_esc (Gdk.EventKey e) {
-        print (e.keyval.to_string () + "\n");
         if (e.keyval == Gdk.Key.Escape) {
-            app.quit ();
+            app_quit ();
             return true;
         }
         return false;
     }
 
+    public void app_quit () {
+        app.quit ();
+    }
+
     private void setup_applications () {
         string[] dirs = Environment.get_system_data_dirs ();
         dirs += Environment.get_user_data_dir ();
-        applications = get_desktop_files (dirs);
+        applications = get_application_buttons (dirs);
         filter_grid (null);
     }
 
@@ -78,6 +81,7 @@ public class MyAppWindow: Gtk.ApplicationWindow {
 
     private void show_about () {
         Gtk.show_about_dialog (this,
+                               authors: new string[] { "Abiola Ibrahim" },
                                logo_icon_name: "start-here",
                                program_name: "Launchar",
                                copyright: "Copyright © 2018",
@@ -113,4 +117,5 @@ public class MyAppWindow: Gtk.ApplicationWindow {
     }
 }
 
+protected MyAppWindow instance;
 
