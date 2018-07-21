@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Your Organization (https://yourwebsite.com)
+ * Copyright (c) 2018 Abiola Ibrahim (https://abio.la)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -16,9 +16,9 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301 USA
  *
- * Authored by: Author <author@example.com>
+ * Authored by: Abiola Ibrahim <abiola89@gmail.com>
  */
-[GtkTemplate (ui = "/com/github/user/Hello/window.glade")]
+[GtkTemplate (ui = "/com/gitlab/abiosoft/launchar/window.glade")]
 public class MyAppWindow: Gtk.ApplicationWindow {
 
     [GtkChild]
@@ -27,49 +27,75 @@ public class MyAppWindow: Gtk.ApplicationWindow {
     [GtkChild]
     Gtk.Grid application_grid;
 
+[GtkChild]
+    Gtk.ScrolledWindow application_scroll;
+
+    [GtkChild]
+    Gtk.SearchEntry search_apps;
+
     AppEntry[] applications;
 
     public MyAppWindow (Gtk.Application app) {
         Object (application: app);
         setup ();
-        setup_applications();
     }
 
     private void setup () {
+        set_keep_above(true);
         mnuabout.activate.connect (show_about);
+        setup_applications ();
+        setup_search ();
     }
 
-    private void setup_applications(){
+    private void setup_applications () {
         string[] dirs = Environment.get_system_data_dirs ();
         dirs += Environment.get_user_data_dir ();
-        applications = get_desktop_files(dirs);
-        for(int i =0; i<applications.length; i++) {
-            var app = applications[i];
-            create_app_button(app, i);
-        }
+        applications = get_desktop_files (dirs);
+        filter_grid (null);
+    }
+
+    private void setup_search () {
+        search_apps.grab_focus ();
+
+        search_apps.search_changed.connect (() => {
+            filter_grid (search_apps.text);
+        });
     }
 
     private void show_about () {
         Gtk.show_about_dialog (this,
-                               logo_icon_name: "application-default-icon",
-                               program_name: "Hello Elementary",
+                               logo_icon_name: "start-here",
+                               program_name: "Launchar",
                                copyright: "Copyright © 2018",
-                               website: "https://github.com/abiosoft/hello-elementary");
+                               Website: "https://gitlab.com/abiosoft/launchar");
     }
 
-    void create_app_button(AppEntry app, int pos) {
-        Gtk.Image image = new Gtk.Image();
-        image.icon_name = app.app_icon;
-        image.set_pixel_size(128);
+    void filter_grid (string ? filter) {
+        application_grid.forall ((element) => application_grid.remove (element));
 
-        Gtk.Button button = new Gtk.Button();
-        button.set_image(image);
-        button.set_label(app.app_name);
-        button.set_image_position (Gtk.PositionType.TOP);
-        button.always_show_image = true;
-        button.show();
+        int count = 0;
+        for (int i = 0; i < applications.length; i++) {
+            var app = applications[i];
+            if (filter != null) {
+                if (!app.app_name.down ().contains (filter.down ())) {
+                    continue;
+                }
+            }
+            application_grid.attach (app.app_button, count % 3, count / 3);
+            count++;
+        }
 
-        application_grid.attach(button, pos/3, pos%3);
+// 12 is a decent list for the view
+        for (int i =count; i < 12; i++) {
+            Gtk.Image dummy = new Gtk.Image ();
+
+            dummy.can_focus = false;
+            dummy.show ();
+            application_grid.attach (dummy, i % 3, i / 3);
+        }
+
+        // scroll back to top
+        application_scroll.vadjustment.value = 0;
     }
 
     AppEntry[] get_desktop_files (string[] dirs) {
@@ -83,17 +109,18 @@ public class MyAppWindow: Gtk.ApplicationWindow {
 
                 FileInfo info;
                 while ((info = enumerator.next_file ()) != null) {
-                    var filename = info.get_name ();
-                    if (!filename.has_suffix (".desktop")) {
-                        continue;
+                        var filename = info.get_name ();
+                    try{
+                        if (!filename.has_suffix (".desktop")) {
+                            continue;
+                        }
+                        var filepath = Path.build_filename (d.get_path (), info.get_name ());
+                        AppEntry app_entry = new AppEntry (filepath);
+
+                        apps += app_entry;
+                    } catch (Error e) {
+                        stderr.printf ("%s - %s\n", filename, e.message);
                     }
-                    print (info.get_name () + "\n");
-
-                    var filepath = Path.build_filename (d.get_path (), info.get_name ());
-                    AppEntry app_entry = new AppEntry (filepath);
-
-                    apps += app_entry;
-                    print (app_entry.to_string () + "\n");
                 }
             } catch (Error e) {
                 stderr.printf ("%s\n", e.message);
@@ -105,6 +132,11 @@ public class MyAppWindow: Gtk.ApplicationWindow {
 }
 
 class AppEntry {
+
+    public Gtk.Button app_button {
+        get { return button; }
+    }
+    private Gtk.Button button;
 
 // Get application icon;
     public string app_icon {
@@ -136,14 +168,32 @@ class AppEntry {
 
         var type = file.get_string ("Desktop Entry", "Type");
         if (type != "Application") {
-            throw new FileError.INVAL ("File is not an application");
+            throw new FileError.INVAL ("File is not an application, type: %s, file: %s".printf(type, desktop_file));
         }
         name = file.get_string ("Desktop Entry", "Name");
         icon = file.get_string ("Desktop Entry", "Icon");
         exec = file.get_string ("Desktop Entry", "Exec");
+
+        create_button ();
+    }
+
+    private void create_button () {
+        Gtk.Image image = new Gtk.Image ();
+
+        image.icon_name = app_icon;
+        image.set_pixel_size (128);
+
+        button = new Gtk.Button ();
+
+        button.set_image (image);
+        button.set_label (app_name);
+        button.set_image_position (Gtk.PositionType.TOP);
+        button.always_show_image = true;
+        button.show ();
     }
 
     public string to_string () {
         return "".concat ("name:", name, " icon:", icon, " exec:", exec);
     }
 }
+

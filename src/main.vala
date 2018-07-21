@@ -19,7 +19,7 @@
 * Authored by: Author <author@example.com>
 */
 int main (string[] args) {
-    var app = new Gtk.Application ("com.github.user.Hello",
+    var app = new Gtk.Application ("com.gitlab.abiosoft.launchar",
                                    ApplicationFlags.FLAGS_NONE);
 
     app.activate.connect (() => {
