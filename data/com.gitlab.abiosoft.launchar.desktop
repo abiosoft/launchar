@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Launchar
+Comment=Gtk Application Launcher
+GenericName=Launcher
+Exec=com.gitlab.abiosoft.launchar
+Icon=start-here
+Type=Application
+StartupNotify=true
+Categories=GNOME;
+MimeType=text/plain;

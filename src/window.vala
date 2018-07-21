@@ -22,9 +22,6 @@
 public class MyAppWindow: Gtk.ApplicationWindow {
 
     [GtkChild]
-    Gtk.MenuItem mnuabout;
-
-    [GtkChild]
     Gtk.Grid application_grid;
 
     [GtkChild]
@@ -48,7 +45,6 @@ public class MyAppWindow: Gtk.ApplicationWindow {
         set_keep_above (true);
         key_press_event.connect (exit_on_esc);
 
-        mnuabout.activate.connect (show_about);
         setup_applications ();
         setup_search ();
     }
@@ -84,15 +80,6 @@ public class MyAppWindow: Gtk.ApplicationWindow {
         search_apps.search_changed.connect (() => {
             filter_grid (search_apps.text);
         });
-    }
-
-    private void show_about () {
-        Gtk.show_about_dialog (this,
-                               authors: new string[] { "Abiola Ibrahim" },
-                               logo_icon_name: "start-here",
-                               program_name: "Launchar",
-                               copyright: "Copyright © 2018",
-                               Website: "https://gitlab.com/abiosoft/launchar");
     }
 
     void filter_grid (string ? filter) {

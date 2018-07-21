@@ -6,4 +6,5 @@ project('com.gitlab.abiosoft.launchar', ['c', 'vala'],        version: '0.1.0',
 sources = []
 subdir('resources')
 subdir('src')
+subdir('data')
 
