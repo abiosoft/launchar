@@ -42,7 +42,7 @@ class AppEntry {
 
     private string comment;
     public string app_comment {
-        get {return comment;}
+        get { return comment; }
     }
 
     private string desktop_file;
@@ -51,6 +51,7 @@ class AppEntry {
         this.desktop_file = desktop_file;
         init ();
     }
+
 
     private void init () throws KeyFileError, FileError {
         KeyFile file = new KeyFile ();
@@ -63,7 +64,17 @@ class AppEntry {
         }
         name = file.get_string ("Desktop Entry", "Name");
         icon = file.get_string ("Desktop Entry", "Icon");
-        exec = file.get_string ("Desktop Entry", "Exec");
+        exec = file.get_string ("Desktop Entry", "Exec").strip ();
+        if (exec.get (exec.length - 2) == '%') {
+            exec = exec.substring (0, exec.length - 2);
+        }
+        foreach (string code in desktop_codes) {
+            if (exec.contains (code)) {
+                exec = exec.replace (code, "");
+                break;
+            }
+        }
+
         comment = file.get_string ("Desktop Entry", "Comment");
 
         create_button ();
@@ -92,6 +103,23 @@ class AppEntry {
     public string to_string () {
         return "".concat ("name:", name, " icon:", icon, " exec:", exec);
     }
+
+// placeholder, couldn't figure out hot to use Gio library.
+    private string[] desktop_codes = new string[] {
+        "%f",
+        "%F",
+        "%u",
+        "%U",
+        "%d",
+        "%D",
+        "%n",
+        "%N",
+        "%i",
+        "%c",
+        "%k",
+        "%v",
+        "%m",
+    };
 }
 
 static AppEntry[] get_application_buttons (string[] dirs) {
@@ -158,3 +186,4 @@ static void launch_app (string exec) {
         stderr.printf ("%s\n", e.message);
     }
 }
+
