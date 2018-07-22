@@ -122,7 +122,7 @@ public class MyAppWindow: Gtk.ApplicationWindow {
                         return s1 ? -1 : 1;
                     }
                 }
-                return 0;
+                return strcmp(a.app_name, b.app_name);
             });
         }
 
