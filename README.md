@@ -1,43 +1,21 @@
-hello-elementary
+launchar
 ----------------
 
-Quick start elementary OS application. Check [official docs](https://elementary.io/en/docs/code/getting-started) for more about building for elementary OS.
+Minimal GTK application launcher.
 
 
-## Prerequisite
-
-elementary SDK
+## Build from source
 
 ```
-$ sudo apt install elementary-sdk
+$ meson --prefix=/usr
+$ cd build
+$ sudo ninja install
 ```
 
-[Optional] source code beautifier
+## Use case
 
-```
-$ sudo apt install uncrustify
-```
-
-## Getting Started
-
-### Terminal
-
-```
-$ git clone https://github.com/abiosoft/hello-elementary hello
-$ cd hello 
-$ sh -c "meson build && cd build && ninja"
-$ build/src/com.github.user.hello
-```
-
-### Gnome Builder
-
-Open cloned repository directory, or `App Menu > Clone Repository`.
-
-includes:
-
-* vala beautifer (compatible with [vala-lint](https://github.com/elementary/vala-lint))
-* default flatpak config (for optional flatpak distribution)
-
+Some Linux desktops limit application launchers to primary displays.
+Pin to a multi-screen dock and it launches on current display.
 
 ## Screenshot
 
