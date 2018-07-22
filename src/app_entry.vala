@@ -59,12 +59,16 @@ class AppEntry {
         file.load_from_file (desktop_file, KeyFileFlags.NONE);
 
         var type = file.get_string ("Desktop Entry", "Type");
-        if (type != "Application") {
+        var no_display = false;
+        if (file.has_key("Desktop Entry", "NoDisplay")) {
+            no_display = file.get_boolean("Desktop Entry", "Type");
+        }
+        if (no_display || type != "Application") {
             throw new FileError.INVAL ("File is not an application, type: %s, file: %s".printf(type, desktop_file));
         }
-        name = file.get_string ("Desktop Entry", "Name");
-        icon = file.get_string ("Desktop Entry", "Icon");
-        exec = file.get_string ("Desktop Entry", "Exec").strip ();
+        name = file.get_locale_string ("Desktop Entry", "Name");
+        icon = file.get_locale_string ("Desktop Entry", "Icon");
+        exec = file.get_locale_string ("Desktop Entry", "Exec").strip ();
         if (exec.get (exec.length - 2) == '%') {
             exec = exec.substring (0, exec.length - 2);
         }
@@ -75,7 +79,7 @@ class AppEntry {
             }
         }
 
-        comment = file.get_string ("Desktop Entry", "Comment");
+        comment = file.get_locale_string ("Desktop Entry", "Comment");
 
         create_button ();
     }
@@ -124,7 +128,7 @@ class AppEntry {
 }
 
 static AppEntry[] get_application_buttons (string[] dirs) {
-    AppEntry[] apps = new AppEntry[] {};
+    GenericArray<AppEntry> apps = new GenericArray<AppEntry>();
 
     foreach (string dir in dirs) {
         try {
@@ -141,7 +145,7 @@ static AppEntry[] get_application_buttons (string[] dirs) {
 
                 AppEntry app_entry = get_appentry (d.get_path (), filename);
                 if (app_entry != null) {
-                    apps += app_entry;
+                    apps.add(app_entry);
                 }
             }
         } catch (Error e) {
@@ -149,7 +153,11 @@ static AppEntry[] get_application_buttons (string[] dirs) {
         }
     }
 
-    return apps;
+    apps.sort_with_data((a, b) => {
+        return strcmp(a.app_name, b.app_name);
+    });
+
+    return apps.data;
 }
 
 private static AppEntry get_appentry (string dir, string filename) {

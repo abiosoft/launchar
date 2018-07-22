@@ -84,6 +84,7 @@ public class MyAppWindow: Gtk.ApplicationWindow {
 
     void filter_grid (string ? filter) {
         application_grid.forall ((element) => application_grid.remove (element));
+        GenericArray < AppEntry > matches = new GenericArray < AppEntry > ();
 
         int count = 0;
         selectedApp = null;
@@ -95,9 +96,41 @@ public class MyAppWindow: Gtk.ApplicationWindow {
                     continue;
                 }
             }
+            matches.add (app);
+        }
+
+        // horrible bruteforce code.
+        // should be done properly someday.
+        if (filter != null) {
+            matches.sort_with_data ((a, b) => {
+                // prioritize name match over comment match
+                string[] str = new string[] {
+                    a.app_name.down (),
+                    b.app_name.down (),
+                    a.app_comment.down (),
+                    b.app_comment.down (),
+                };
+                for (int i =0; i < str.length; i +=2) {
+                    var s1 = str[i].has_prefix (filter.down ());
+                    var s2 = str[i + 1].has_prefix (filter.down ());
+                    if (s1 != s2) {
+                        return s1 ? -1 : 1;
+                    }
+                    s1 = str[i].contains (filter.down ());
+                    s2 = str[i + 1].contains (filter.down ());
+                    if (s1 != s2) {
+                        return s1 ? -1 : 1;
+                    }
+                }
+                return 0;
+            });
+        }
+
+        // now append comment matches.
+        foreach (AppEntry app in matches.data) {
             application_grid.attach (app.app_button, count % 3, count / 3);
             count++;
-            if (count == 1) {
+            if (selectedApp == null) {
                 selectedApp = app;
             }
         }
