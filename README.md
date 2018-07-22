@@ -7,7 +7,7 @@ Minimal GTK application launcher.
 ## Build from source
 
 ```
-$ meson --prefix=/usr
+$ meson --prefix=/usr build
 $ cd build
 $ sudo ninja install
 ```
