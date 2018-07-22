@@ -1,5 +1,5 @@
 launchar
-----------------
+--------
 
 Minimal GTK application launcher.
 
@@ -22,7 +22,13 @@ Pin to a multi-screen dock and it launches on current display.
 ![screenshot](screenshot.png)
 
 
-## Demonstration
+## Video
 
-![demonstration](demonstration.gif)
+[Video](demonstration.gif)
+
+## Donate
+
+[Bitcoin](bitcoin:1GTHYEDiy2C7RzXn5nY4wVRaEN2GvLjwZN)
+
+[PayPal](https://paypal.me/abiosoft)
 
