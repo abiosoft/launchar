@@ -14,7 +14,7 @@ $ sudo ninja install
 
 ## Use case
 
-Some Linux desktops limit application launchers to primary displays.
+Some Linux desktops limit application launcher to primary display.
 Pin to a multi-screen dock and it launches on current display.
 
 ## Screenshot
