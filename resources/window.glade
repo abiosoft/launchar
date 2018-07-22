@@ -68,7 +68,6 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="spacing">1</property>
-        <property name="show_close_button">True</property>
         <child>
           <object class="GtkSearchEntry" id="search_apps">
             <property name="visible">True</property>
