@@ -40,9 +40,14 @@ public class AppEntry {
         get { return exec; }
     }
 
-    private string comment;
+    private string comment = "";
     public string app_comment {
         get { return comment; }
+    }
+
+    private bool terminal = false;
+    public bool run_in_terminal {
+        get { return terminal; }
     }
 
     private string desktop_file;
@@ -61,7 +66,7 @@ public class AppEntry {
         var type = file.get_string ("Desktop Entry", "Type");
         var no_display = false;
         if (file.has_key ("Desktop Entry", "NoDisplay")) {
-            no_display = file.get_boolean ("Desktop Entry", "Type");
+            no_display = file.get_boolean ("Desktop Entry", "NoDisplay");
         }
         if (no_display || type != "Application") {
             throw new FileError.INVAL ("File is not an application, type: %s, file: %s".printf(type, desktop_file));
@@ -73,19 +78,19 @@ public class AppEntry {
         // DesktopAppInfo giving undesired results,
         // falling back to manually running the commands.
         // strip out desktop spec codes from the command.
-        if (exec.get (exec.length - 2) == '%') {
-            exec = exec.substring (0, exec.length - 2);
-        }
         foreach (string code in desktop_codes) {
             if (exec.contains (code)) {
-                exec = exec.replace (code, "");
+                exec = exec.replace (code, "").strip ();
                 break;
             }
         }
 
-        comment = "";
         if (file.has_key ("Desktop Entry", "Comment")) {
             comment = file.get_locale_string ("Desktop Entry", "Comment");
+        }
+
+        if (file.has_key ("Desktop Entry", "Terminal")) {
+            terminal = file.get_boolean ("Desktop Entry", "Terminal");
         }
 
         create_button ();
@@ -178,13 +183,19 @@ private static AppEntry get_appentry (string dir, string filename) {
     return app_entry;
 }
 
-static void launch_app (string exec) {
+static void launch_app (string exec, bool terminal) {
     MainLoop loop = new MainLoop ();
+
+    string[] args = new string[] { "sh", "-c", exec };
+    if (terminal) {
+        Terminal t = get_term ();
+        args = new string[] { t.command, t.flag, exec };
+    }
 
     try{
         Pid child_pid;
         Process.spawn_async (null,
-                             new string[] { "sh", "-c", exec },
+                             args,
                              Environ.get (),
                              SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD
                              | SpawnFlags.STDOUT_TO_DEV_NULL | SpawnFlags.STDERR_TO_DEV_NULL,
@@ -201,4 +212,28 @@ static void launch_app (string exec) {
         stderr.printf ("%s\n", e.message);
     }
 }
+
+static Terminal get_term () {
+    foreach (Terminal t in terms) {
+        if (Environment.find_program_in_path (t.command) != null) {
+            return t;
+        }
+    }
+    return terms[terms.length - 1];
+}
+
+struct Terminal {
+    string command;
+    string flag;
+}
+
+// this is a gtk app, prioritize gnome terminal.
+const Terminal[] terms = {
+    { "gnome-terminal", "--" },
+    { "x-terminal-emulator", "-e" },
+    { "lxterminal", "-e" },
+    { "xfce4-terminal", "-e" },
+    { "urxvt", "-e" },
+    { "xterm", "-e" },
+};
 

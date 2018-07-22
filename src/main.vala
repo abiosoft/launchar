@@ -33,7 +33,7 @@ int main (string[] args) {
 
     // launch desktop app
     if (Instance.app != null) {
-        launch_app (Instance.app.app_exec);
+        launch_app (Instance.app.app_exec, Instance.app.run_in_terminal);
     }
 
     return exit;
