@@ -93,6 +93,7 @@ class AppEntry {
         button.set_image_position (Gtk.PositionType.TOP);
         button.relief = Gtk.ReliefStyle.NONE;
         button.always_show_image = true;
+        button.tooltip_text = comment;
         button.clicked.connect (() => {
             instance.hide ();
             launch_app (exec);
