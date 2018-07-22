@@ -20,7 +20,7 @@
  */
 int main (string[] args) {
     var app = new Gtk.Application ("com.gitlab.abiosoft.launchar",
-                                   ApplicationFlags.FLAGS_NONE);
+                                   ApplicationFlags.NON_UNIQUE);
 
     app.activate.connect (() => {
         var win = app.active_window;
