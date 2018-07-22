@@ -10,7 +10,7 @@ executable(
     meson.project_name(),
     sources,
     dependencies: [
-        dependency('gtk+-3.0')
+        dependency('gtk+-3.0'),
     ],
     install: true
 )

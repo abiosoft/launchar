@@ -25,10 +25,21 @@ int main (string[] args) {
     app.activate.connect (() => {
         var win = app.active_window;
         if (win == null) {
-            win = (instance = new MyAppWindow (app));
+            win = (Instance.window = new MyAppWindow (app));
         }
         win.present ();
     });
+    int exit = app.run (args);
 
-    return app.run (args);
+    // launch desktop app
+    if (Instance.app != null) {
+        launch_app (Instance.app.app_exec);
+    }
+
+    return exit;
+}
+
+namespace Instance {
+    public Gtk.ApplicationWindow window;
+    public AppEntry app;
 }

@@ -43,15 +43,15 @@ public class MyAppWindow: Gtk.ApplicationWindow {
 
     private void setup () {
         set_keep_above (true);
-        key_press_event.connect (exit_on_esc);
+        key_press_event.connect (handle_esc_return);
 
         setup_applications ();
         setup_search ();
     }
 
-    private bool exit_on_esc (Gdk.EventKey e) {
+    private bool handle_esc_return (Gdk.EventKey e) {
         if (e.keyval == Gdk.Key.Escape) {
-            app_quit ();
+            app.quit ();
             return true;
         }
         if (e.keyval == Gdk.Key.Return) {
@@ -61,10 +61,6 @@ public class MyAppWindow: Gtk.ApplicationWindow {
             return true;
         }
         return false;
-    }
-
-    public void app_quit () {
-        app.quit ();
     }
 
     private void setup_applications () {
@@ -88,6 +84,7 @@ public class MyAppWindow: Gtk.ApplicationWindow {
 
         int count = 0;
         selectedApp = null;
+        // filter
         for (int i = 0; i < applications.length; i++) {
             var app = applications[i];
             if (filter != null) {
@@ -99,6 +96,7 @@ public class MyAppWindow: Gtk.ApplicationWindow {
             matches.add (app);
         }
 
+        // sort
         // horrible bruteforce code.
         // should be done properly someday.
         if (filter != null) {
@@ -122,11 +120,11 @@ public class MyAppWindow: Gtk.ApplicationWindow {
                         return s1 ? -1 : 1;
                     }
                 }
-                return strcmp(a.app_name, b.app_name);
+                return strcmp (a.app_name, b.app_name);
             });
         }
 
-        // now append comment matches.
+        // add to grid
         foreach (AppEntry app in matches.data) {
             application_grid.attach (app.app_button, count % 3, count / 3);
             count++;
@@ -148,6 +146,4 @@ public class MyAppWindow: Gtk.ApplicationWindow {
         application_scroll.vadjustment.value = 0;
     }
 }
-
-protected MyAppWindow instance;
 

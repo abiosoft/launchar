@@ -18,7 +18,7 @@
  *
  * Authored by: Abiola Ibrahim <abiola89@gmail.com>
  */
-class AppEntry {
+public class AppEntry {
 
     public Gtk.Button app_button {
         get { return button; }
@@ -60,15 +60,19 @@ class AppEntry {
 
         var type = file.get_string ("Desktop Entry", "Type");
         var no_display = false;
-        if (file.has_key("Desktop Entry", "NoDisplay")) {
-            no_display = file.get_boolean("Desktop Entry", "Type");
+        if (file.has_key ("Desktop Entry", "NoDisplay")) {
+            no_display = file.get_boolean ("Desktop Entry", "Type");
         }
         if (no_display || type != "Application") {
             throw new FileError.INVAL ("File is not an application, type: %s, file: %s".printf(type, desktop_file));
         }
         name = file.get_locale_string ("Desktop Entry", "Name");
         icon = file.get_locale_string ("Desktop Entry", "Icon");
-        exec = file.get_locale_string ("Desktop Entry", "Exec").strip ();
+        exec = file.get_string ("Desktop Entry", "Exec").strip ();
+
+        // DesktopAppInfo giving undesired results,
+        // falling back to manually running the commands.
+        // strip out desktop spec codes from the command.
         if (exec.get (exec.length - 2) == '%') {
             exec = exec.substring (0, exec.length - 2);
         }
@@ -79,7 +83,10 @@ class AppEntry {
             }
         }
 
-        comment = file.get_locale_string ("Desktop Entry", "Comment");
+        comment = "";
+        if (file.has_key ("Desktop Entry", "Comment")) {
+            comment = file.get_locale_string ("Desktop Entry", "Comment");
+        }
 
         create_button ();
     }
@@ -99,8 +106,8 @@ class AppEntry {
         button.always_show_image = true;
         button.tooltip_text = comment;
         button.clicked.connect (() => {
-            instance.hide ();
-            launch_app (exec);
+            Instance.app = this;
+            Instance.window.close ();
         });
         button.show ();
     }
@@ -109,7 +116,7 @@ class AppEntry {
         return "".concat ("name:", name, " icon:", icon, " exec:", exec);
     }
 
-// placeholder, couldn't figure out hot to use Gio library.
+    // placeholder, used becaused DesktopAppInfo is misbehaving.
     private string[] desktop_codes = new string[] {
         "%f",
         "%F",
@@ -128,7 +135,7 @@ class AppEntry {
 }
 
 static AppEntry[] get_application_buttons (string[] dirs) {
-    GenericArray<AppEntry> apps = new GenericArray<AppEntry>();
+    GenericArray < AppEntry > apps = new GenericArray < AppEntry > ();
 
     foreach (string dir in dirs) {
         try {
@@ -145,7 +152,7 @@ static AppEntry[] get_application_buttons (string[] dirs) {
 
                 AppEntry app_entry = get_appentry (d.get_path (), filename);
                 if (app_entry != null) {
-                    apps.add(app_entry);
+                    apps.add (app_entry);
                 }
             }
         } catch (Error e) {
@@ -153,8 +160,8 @@ static AppEntry[] get_application_buttons (string[] dirs) {
         }
     }
 
-    apps.sort_with_data((a, b) => {
-        return strcmp(a.app_name, b.app_name);
+    apps.sort_with_data ((a, b) => {
+        return strcmp (a.app_name, b.app_name);
     });
 
     return apps.data;
@@ -187,7 +194,6 @@ static void launch_app (string exec) {
         ChildWatch.add (child_pid, (pid, status) => {
             Process.close_pid (pid);
             loop.quit ();
-            instance.app_quit ();
         });
 
         loop.run ();
@@ -195,5 +201,4 @@ static void launch_app (string exec) {
         stderr.printf ("%s\n", e.message);
     }
 }
-
 
