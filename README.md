@@ -19,16 +19,12 @@ Pin to a multi-screen dock and it launches on current display.
 
 ## Screenshot
 
+[Gif Video](demonstration.gif)
+
 ![screenshot](screenshot.png)
 
 
-## Video
-
-[Video](demonstration.gif)
-
 ## Donate
 
-[Bitcoin](bitcoin:1GTHYEDiy2C7RzXn5nY4wVRaEN2GvLjwZN)
-
-[PayPal](https://paypal.me/abiosoft)
+[Bitcoin](bitcoin:1GTHYEDiy2C7RzXn5nY4wVRaEN2GvLjwZN) | [PayPal](https://paypal.me/abiosoft)
 
