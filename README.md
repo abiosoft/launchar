@@ -20,3 +20,9 @@ Pin to a multi-screen dock and it launches on current display.
 ## Screenshot
 
 ![screenshot](screenshot.png)
+
+
+## Demonstration
+
+![demonstration](demonstration.gif)
+
