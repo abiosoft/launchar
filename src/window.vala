@@ -15,7 +15,7 @@
 */
 
 [GtkTemplate (ui = "/com/gitlab/abiosoft/launchar/window.glade")]
-public class MyAppWindow: Gtk.ApplicationWindow {
+public class LauncharWindow: Gtk.ApplicationWindow {
 
     [GtkChild]
     Gtk.Grid application_grid;
@@ -31,7 +31,7 @@ public class MyAppWindow: Gtk.ApplicationWindow {
 
     private Gtk.Application app;
 
-    public MyAppWindow (Gtk.Application app) {
+    public LauncharWindow (Gtk.Application app) {
         Object (application: app);
         this.app = app;
         setup ();
