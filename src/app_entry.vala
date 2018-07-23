@@ -180,6 +180,7 @@ private static AppEntry get_appentry (string dir, string filename) {
     try{
         var filepath = Path.build_filename (dir, filename);
         app_entry = new AppEntry (filepath);
+    } catch (FileError.INVAL e) {
     } catch (Error e) {
         stderr.printf ("%s - %s\n", filename, e.message);
     }
