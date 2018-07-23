@@ -2,7 +2,7 @@
 Name=Launchar
 Comment=Gtk Application Launcher
 GenericName=Launcher
-Exec=launchar
+Exec=com.gitlab.abiosoft.launchar
 Icon=start-here
 Type=Application
 StartupNotify=true
