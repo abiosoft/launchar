@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 [GtkTemplate (ui = "/com/gitlab/abiosoft/launchar/window.glade")]
 public class LauncharWindow: Gtk.ApplicationWindow {
@@ -85,7 +85,8 @@ public class LauncharWindow: Gtk.ApplicationWindow {
             var app = applications[i];
             if (filter != null) {
                 if (!app.app_name.down ().contains (filter.down ())
-                    && !app.app_comment.down ().contains (filter.down ())) {
+                    && !app.app_comment.down ().contains (filter.down ())
+                    && !app.app_keywords.down ().contains (filter.down ())) {
                     continue;
                 }
             }
@@ -103,6 +104,8 @@ public class LauncharWindow: Gtk.ApplicationWindow {
                     b.app_name.down (),
                     a.app_comment.down (),
                     b.app_comment.down (),
+                    a.app_keywords.down (),
+                    b.app_keywords.down (),
                 };
                 for (int i =0; i < str.length; i +=2) {
                     var s1 = str[i].has_prefix (filter.down ());
@@ -116,7 +119,7 @@ public class LauncharWindow: Gtk.ApplicationWindow {
                         return s1 ? -1 : 1;
                     }
                 }
-                return strcmp (a.app_name, b.app_name);
+                return strcmp (a.app_name.down (), b.app_name.down ());
             });
         }
 

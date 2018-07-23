@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 public class AppEntry {
 
@@ -45,6 +45,10 @@ public class AppEntry {
     public bool run_in_terminal {
         get { return terminal; }
     }
+    public string app_keywords {
+        get { return keywords; }
+    }
+    private string keywords = "";
 
     private string desktop_file;
 
@@ -87,6 +91,9 @@ public class AppEntry {
 
         if (file.has_key ("Desktop Entry", "Terminal")) {
             terminal = file.get_boolean ("Desktop Entry", "Terminal");
+        }
+        if (file.has_key ("Desktop Entry", "Keywords")) {
+            keywords = file.get_locale_string ("Desktop Entry", "Keywords");
         }
 
         create_button ();
@@ -162,7 +169,7 @@ static AppEntry[] get_application_buttons (string[] dirs) {
     }
 
     apps.sort_with_data ((a, b) => {
-        return strcmp (a.app_name, b.app_name);
+        return strcmp (a.app_name.down (), b.app_name.down ());
     });
 
     return apps.data;
