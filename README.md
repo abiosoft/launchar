@@ -3,6 +3,10 @@ launchar
 
 Minimal GTK application launcher.
 
+## Use cases
+
+* Some Linux desktops limit application launcher to primary display. Pin to a multi-screen dock and it launches on current display.
+* Alternative launcher for Tiling window managers.
 
 ## Build from source
 
@@ -31,11 +35,6 @@ Fedora
 ```
 $ sudo dnf install gtk3-devel vala meson ninja-build
 ```
-
-## Use case
-
-* Some Linux desktops limit application launcher to primary display. Pin to a multi-screen dock and it launches on current display.
-* Alternative launcher for Tiling window managers.
 
 ## Screenshot
 
