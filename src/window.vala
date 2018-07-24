@@ -38,7 +38,10 @@ public class LauncharWindow: Gtk.ApplicationWindow {
     }
 
     private void setup () {
-        set_keep_above (true);
+        this.show.connect(() => {
+            this.set_keep_above (true);
+        });
+
         key_press_event.connect (handle_esc_return);
 
         setup_applications ();
