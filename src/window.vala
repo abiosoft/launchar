@@ -38,7 +38,7 @@ public class LauncharWindow: Gtk.ApplicationWindow {
     }
 
     private void setup () {
-        this.show.connect(() => {
+        this.show.connect (() => {
             this.set_keep_above (true);
         });
 
@@ -77,7 +77,8 @@ public class LauncharWindow: Gtk.ApplicationWindow {
         });
     }
 
-    void filter_grid (string ? filter) {
+    void filter_grid (string ? f) {
+        string ? filter = f == null ? null : f.down ();
         application_grid.forall ((element) => application_grid.remove (element));
         GenericArray < AppEntry > matches = new GenericArray < AppEntry > ();
 
@@ -87,9 +88,10 @@ public class LauncharWindow: Gtk.ApplicationWindow {
         for (int i = 0; i < applications.length; i++) {
             var app = applications[i];
             if (filter != null) {
-                if (!app.app_name.down ().contains (filter.down ())
-                    && !app.app_comment.down ().contains (filter.down ())
-                    && !app.app_keywords.down ().contains (filter.down ())) {
+                if (!app.app_name.down ().contains (filter)
+                    && !app.app_search_name.contains (filter)
+                    && !app.app_comment.down ().contains (filter)
+                    && !app.app_keywords.down ().contains (filter)) {
                     continue;
                 }
             }
@@ -105,19 +107,21 @@ public class LauncharWindow: Gtk.ApplicationWindow {
                 string[] str = new string[] {
                     a.app_name.down (),
                     b.app_name.down (),
+                    a.app_search_name,
+                    b.app_search_name,
                     a.app_comment.down (),
                     b.app_comment.down (),
                     a.app_keywords.down (),
                     b.app_keywords.down (),
                 };
                 for (int i =0; i < str.length; i +=2) {
-                    var s1 = str[i].has_prefix (filter.down ());
-                    var s2 = str[i + 1].has_prefix (filter.down ());
+                    var s1 = str[i].has_prefix (filter);
+                    var s2 = str[i + 1].has_prefix (filter);
                     if (s1 != s2) {
                         return s1 ? -1 : 1;
                     }
-                    s1 = str[i].contains (filter.down ());
-                    s2 = str[i + 1].contains (filter.down ());
+                    s1 = str[i].contains (filter);
+                    s2 = str[i + 1].contains (filter);
                     if (s1 != s2) {
                         return s1 ? -1 : 1;
                     }

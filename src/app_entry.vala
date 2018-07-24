@@ -30,6 +30,10 @@ public class AppEntry {
     public string app_name {
         get { return name; }
     }
+    private string search_name;
+    public string app_search_name {
+        get { return search_name; }
+    }
 
     private string exec;
     public string app_exec {
@@ -54,11 +58,11 @@ public class AppEntry {
 
     public AppEntry (string desktop_file) throws KeyFileError, FileError {
         this.desktop_file = desktop_file;
-        init ();
+        load_desktop_file ();
     }
 
 
-    private void init () throws KeyFileError, FileError {
+    private void load_desktop_file () throws KeyFileError, FileError {
         KeyFile file = new KeyFile ();
 
         file.load_from_file (desktop_file, KeyFileFlags.NONE);
@@ -72,6 +76,7 @@ public class AppEntry {
             throw new FileError.INVAL ("File is not an application, type: %s, file: %s".printf(type, desktop_file));
         }
         name = file.get_locale_string ("Desktop Entry", "Name");
+        search_name = name.down ().replace (" ", ""); // get rid of whitespace for easier filter.
         icon = file.get_locale_string ("Desktop Entry", "Icon");
         exec = file.get_string ("Desktop Entry", "Exec").strip ();
 
@@ -105,6 +110,7 @@ public class AppEntry {
         if (Path.is_absolute (app_icon)) {
             try{
                 Gdk.Pixbuf buf = new Gdk.Pixbuf.from_file (app_icon);
+
                 image.pixbuf = buf.scale_simple (128, 128, Gdk.InterpType.BILINEAR);
             } catch (Error e) {
                 stderr.printf ("could not load icon for %s, error: %s\n", app_name, e.message);
