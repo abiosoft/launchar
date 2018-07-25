@@ -5,7 +5,7 @@ Minimal GTK application launcher.
 
 ## Use cases
 
-* Some Linux desktops limit application launcher to primary display. Pin to a multi-screen dock and it launches on current display.
+* Some Linux desktops limit application launcher to primary display. Pin to a multi-screen dock (or assign it a shortcut key) and it launches on current display.
 * Alternative launcher for Tiling window managers.
 
 ## Build from source
