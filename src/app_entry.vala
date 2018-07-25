@@ -71,12 +71,34 @@ public class AppEntry {
         var no_display = false;
         if (file.has_key ("Desktop Entry", "NoDisplay")) {
             no_display = file.get_boolean ("Desktop Entry", "NoDisplay");
+
+            // override nodisplay if `OnlyShowIn` is set.
+            string desktop = Environment.get_variable ("XDG_CURRENT_DESKTOP");
+            if (desktop != null) {
+                if (file.has_key ("Desktop Entry", "OnlyShowIn")) {
+                    string[] list = file.get_string_list ("Desktop Entry", "OnlyShowIn");
+                    foreach (string l in list) {
+                        if (l.down () == desktop.down ()) {
+                            no_display = false;
+                            break;
+                        }
+                    }
+                } else if (file.has_key ("Desktop Entry", "NotShowIn")) {
+                    string[] list = file.get_string_list ("Desktop Entry", "NotShowIn");
+                    foreach (string l in list) {
+                        if (l.down () == desktop.down ()) {
+                            no_display = true;
+                            break;
+                        }
+                    }
+                }
+            }
         }
         if (no_display || type != "Application") {
             throw new FileError.INVAL ("File is not an application, type: %s, file: %s".printf(type, desktop_file));
         }
         name = file.get_locale_string ("Desktop Entry", "Name");
-        search_name = name.down ().replace (" ", ""); // get rid of whitespace for easier filter.
+        search_name = name.down ().replace (" ", "");     // get rid of whitespace for easier filter.
         icon = file.get_locale_string ("Desktop Entry", "Icon");
         exec = file.get_string ("Desktop Entry", "Exec").strip ();
 
