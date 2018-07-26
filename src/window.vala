@@ -132,7 +132,7 @@ public class LauncharWindow: Gtk.ApplicationWindow {
 
         // add to grid
         foreach (AppEntry app in matches.data) {
-            application_grid.attach (app.app_button, count % 3, count / 3);
+            application_grid.attach (app.app_button, count % ICON_COLS, count / ICON_COLS);
             count++;
             if (selectedApp == null) {
                 selectedApp = app;
@@ -145,7 +145,7 @@ public class LauncharWindow: Gtk.ApplicationWindow {
 
             dummy.can_focus = false;
             dummy.show ();
-            application_grid.attach (dummy, i % 3, i / 3);
+            application_grid.attach (dummy, i % ICON_COLS, i / ICON_COLS);
         }
 
         // scroll back to top

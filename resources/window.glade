@@ -11,6 +11,7 @@
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="urgency_hint">True</property>
+    <property name="gravity">center</property>
     <property name="show_menubar">False</property>
     <child>
       <object class="GtkScrolledWindow" id="application_scroll">
@@ -29,7 +30,10 @@
               <object class="GtkGrid" id="application_grid">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_left">40</property>
+                <property name="margin_right">40</property>
                 <property name="row_spacing">20</property>
+                <property name="column_spacing">40</property>
                 <property name="row_homogeneous">True</property>
                 <property name="column_homogeneous">True</property>
                 <child>
@@ -69,7 +73,7 @@
       <object class="GtkHeaderBar" id="headerbar">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="spacing">1</property>
+        <property name="spacing">0</property>
         <child>
           <object class="GtkSearchEntry" id="search_apps">
             <property name="visible">True</property>

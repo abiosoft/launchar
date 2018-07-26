@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+const int ICON_SIZE =96;
+const int ICON_COLS =3;
+const int BUTTON_CHAR_WIDTH=15;
+
 public class AppEntry {
 
     public Gtk.Button app_button {
@@ -30,6 +34,14 @@ public class AppEntry {
     public string app_name {
         get { return name; }
     }
+    public string app_name_wrap() {
+        string wrap = name.concat("");
+        if (name.length > BUTTON_CHAR_WIDTH) {
+           wrap = wrap.substring(0, BUTTON_CHAR_WIDTH).concat("...");
+        }
+        return wrap;
+    }
+
     private string search_name;
     public string app_search_name {
         get { return search_name; }
@@ -98,7 +110,7 @@ public class AppEntry {
             throw new FileError.INVAL ("File is not an application, type: %s, file: %s".printf(type, desktop_file));
         }
         name = file.get_locale_string ("Desktop Entry", "Name");
-        search_name = name.down ().replace (" ", "");     // get rid of whitespace for easier filter.
+        search_name = name.down ().replace (" ", ""); // get rid of whitespace for easier filter.
         icon = file.get_locale_string ("Desktop Entry", "Icon");
         exec = file.get_string ("Desktop Entry", "Exec").strip ();
 
@@ -133,7 +145,7 @@ public class AppEntry {
             try{
                 Gdk.Pixbuf buf = new Gdk.Pixbuf.from_file (app_icon);
 
-                image.pixbuf = buf.scale_simple (128, 128, Gdk.InterpType.BILINEAR);
+                image.pixbuf = buf.scale_simple (ICON_SIZE, ICON_SIZE, Gdk.InterpType.BILINEAR);
             } catch (Error e) {
                 stderr.printf ("could not load icon for %s, error: %s\n", app_name, e.message);
                 image.icon_name = app_icon;
@@ -142,12 +154,12 @@ public class AppEntry {
             image.icon_name = app_icon;
         }
 
-        image.set_pixel_size (128);
+        image.set_pixel_size (ICON_SIZE);
 
         button = new Gtk.Button ();
 
         button.set_image (image);
-        button.set_label (app_name);
+        button.set_label (app_name_wrap());
         button.set_image_position (Gtk.PositionType.TOP);
         button.relief = Gtk.ReliefStyle.NONE;
         button.always_show_image = true;
@@ -162,23 +174,6 @@ public class AppEntry {
     public string to_string () {
         return "".concat ("name:", name, " icon:", icon, " exec:", exec);
     }
-
-    // placeholder, used becaused DesktopAppInfo is misbehaving.
-    private string[] desktop_codes = new string[] {
-        "%f",
-        "%F",
-        "%u",
-        "%U",
-        "%d",
-        "%D",
-        "%n",
-        "%N",
-        "%i",
-        "%c",
-        "%k",
-        "%v",
-        "%m",
-    };
 }
 
 static AppEntry[] get_application_buttons (string[] dirs) {
@@ -280,3 +275,19 @@ const Terminal[] terms = {
     { "xterm", "-e" },
 };
 
+// placeholder, used becaused DesktopAppInfo is misbehaving.
+const string[] desktop_codes = {
+    "%f",
+    "%F",
+    "%u",
+    "%U",
+    "%d",
+    "%D",
+    "%n",
+    "%N",
+    "%i",
+    "%c",
+    "%k",
+    "%v",
+    "%m",
+};
