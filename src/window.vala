@@ -115,15 +115,32 @@ public class LauncharWindow: Gtk.ApplicationWindow {
                     b.app_keywords.down (),
                 };
                 for (int i =0; i < str.length; i +=2) {
-                    var s1 = str[i].has_prefix (filter);
-                    var s2 = str[i + 1].has_prefix (filter);
+                    var s1 = str[i] == filter;
+                    var s2 = str[i + 1] == filter;
                     if (s1 != s2) {
                         return s1 ? -1 : 1;
+                    }
+                    if (s1 && s2){
+                        break;
+                    }
+                    s1 = str[i].has_prefix (filter);
+                    s2 = str[i + 1].has_prefix (filter);
+                    if (s1 != s2) {
+                        return s1 ? -1 : 1;
+                    }
+                    if (s1 && s2) {
+                        break;
+                    }
+                    if (s1 && s2){
+                        break;
                     }
                     s1 = str[i].contains (filter);
                     s2 = str[i + 1].contains (filter);
                     if (s1 != s2) {
                         return s1 ? -1 : 1;
+                    }
+                    if (s1 && s2){
+                        break;
                     }
                 }
                 return strcmp (a.app_name.down (), b.app_name.down ());
