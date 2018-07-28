@@ -15,6 +15,7 @@
 */
 
 int main (string[] args) {
+
     var app = new Gtk.Application ("com.gitlab.abiosoft.launchar",
                                    ApplicationFlags.NON_UNIQUE);
 
@@ -29,7 +30,7 @@ int main (string[] args) {
 
     // launch desktop app
     if (Instance.app != null) {
-        launch_app (Instance.app.app_exec, Instance.app.run_in_terminal);
+        launch_app (Instance.app.app_exec, Instance.app.run_in_terminal, Instance.extension);
     }
 
     return exit;
@@ -38,4 +39,5 @@ int main (string[] args) {
 namespace Instance {
     public Gtk.ApplicationWindow window;
     public AppEntry app;
+    public string? extension;
 }

@@ -2,6 +2,7 @@ sources += [
     'main.vala',
     'window.vala',
     'app_entry.vala',
+    'config.vala',
 ]
 
 
@@ -11,6 +12,7 @@ executable(
     sources,
     dependencies: [
         dependency('gtk+-3.0'),
+        dependency('gee-0.8'),
     ],
     install: true
 )

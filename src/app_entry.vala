@@ -221,8 +221,11 @@ private static AppEntry get_appentry (string dir, string filename) {
     return app_entry;
 }
 
-static void launch_app (string exec, bool terminal) {
+static void launch_app (owned string exec, bool terminal, string? extension = null) {
     MainLoop loop = new MainLoop ();
+    if (extension != null){
+        exec = extension.replace(COMMAND_PLACEHOLDER, exec);
+    }
 
     string[] args = new string[] { "sh", "-c", exec };
     if (terminal) {

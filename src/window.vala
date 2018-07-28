@@ -34,12 +34,12 @@ public class LauncharWindow: Gtk.ApplicationWindow {
 
     private Gtk.Application app;
 
+    private Config config;
+
     public LauncharWindow (Gtk.Application app) {
         Object (application: app);
         this.app = app;
         setup ();
-
-
     }
 
     private void setup () {
@@ -47,11 +47,57 @@ public class LauncharWindow: Gtk.ApplicationWindow {
             this.set_keep_above (true);
         });
 
+        config = get_config ();
+        Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = config.dark_theme;
+
         setup_applications ();
         setup_search ();
     }
 
-    private void auto_scroll (Gtk.Widget ? child, int prev_y) {
+    private void setup_applications () {
+        int prev_y = 0;
+        application_grid.set_focus_child.connect ((child) => {
+            auto_scroll (child, ref prev_y);
+        });
+        application_grid.key_press_event.connect ((e) => {
+            if (e.keyval == Gdk.Key.Escape) {
+                search_apps.grab_focus ();
+                return true;
+            }
+            return false;
+        });
+
+        string[] dirs = Environment.get_system_data_dirs ();
+        dirs += Environment.get_user_data_dir ();
+        applications = get_application_buttons (dirs);
+        filter_grid (null);
+    }
+
+    private void setup_search () {
+        search_apps.grab_focus ();
+
+        search_apps.key_press_event.connect (handle_esc_return);
+        search_apps.search_changed.connect (() => {
+            search_desc.set_text ("");
+            Instance.extension = null;
+
+            var str = search_apps.text.split(",");
+            var text = str[0].strip();
+
+            if (str.length > 1){
+                var keyword = str[1].strip().down();
+                if (config.commands.has_key(keyword)){
+                    var extension = config.commands[keyword];
+                    search_desc.set_text (extension.description);
+                    Instance.extension = extension.command;
+                }
+            }
+
+            filter_grid (text);
+        });
+    }
+
+    private void auto_scroll (Gtk.Widget ? child, ref int prev_y) {
         if (child is Button) {
             Button button = (Button) child;
             selectedApp = button.app;
@@ -97,35 +143,6 @@ public class LauncharWindow: Gtk.ApplicationWindow {
             return true;
         }
         return false;
-    }
-
-    private void setup_applications () {
-        int prev_y = 0;
-        application_grid.set_focus_child.connect ((child) => {
-            auto_scroll (child, prev_y);
-        });
-        application_grid.key_press_event.connect( (e) => {
-            if (e.keyval == Gdk.Key.Escape) {
-                search_apps.grab_focus();
-                return true;
-            }
-            return false;
-        }  );
-
-        string[] dirs = Environment.get_system_data_dirs ();
-        dirs += Environment.get_user_data_dir ();
-        applications = get_application_buttons (dirs);
-        filter_grid (null);
-    }
-
-    private void setup_search () {
-        search_apps.grab_focus ();
-
-        search_apps.key_press_event.connect (handle_esc_return);
-        search_apps.search_changed.connect (() => {
-            search_desc.set_text (search_apps.text);
-            filter_grid (search_apps.text);
-        });
     }
 
     void filter_grid (string ? f) {
