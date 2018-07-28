@@ -6,7 +6,7 @@
     <property name="can_focus">False</property>
     <property name="modal">True</property>
     <property name="window_position">center</property>
-    <property name="default_height">500</property>
+    <property name="default_height">400</property>
     <property name="icon_name">start-here</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
@@ -85,8 +85,17 @@
             <property name="placeholder_text" translatable="yes">Filter Applications</property>
           </object>
         </child>
-        <child type="title">
-          <placeholder/>
+        <child>
+          <object class="GtkLabel" id="search_desc">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="justify">right</property>
+            <property name="ellipsize">end</property>
+            <property name="max_width_chars">25</property>
+          </object>
+          <packing>
+            <property name="pack_type">end</property>
+          </packing>
         </child>
       </object>
     </child>

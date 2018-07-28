@@ -156,7 +156,7 @@ public class AppEntry {
 
         image.set_pixel_size (ICON_SIZE);
 
-        button = new Gtk.Button ();
+        button = new Button (this);
 
         button.set_image (image);
         button.set_label (app_name_wrap());
@@ -291,3 +291,11 @@ const string[] desktop_codes = {
     "%v",
     "%m",
 };
+
+public class Button: Gtk.Button {
+    public Button(AppEntry app) {
+        Object();
+        this.app = app;
+    }
+    public AppEntry app;
+}

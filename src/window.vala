@@ -26,6 +26,9 @@ public class LauncharWindow: Gtk.ApplicationWindow {
     [GtkChild]
     Gtk.SearchEntry search_apps;
 
+    [GtkChild]
+    Gtk.Label search_desc;
+
     AppEntry[] applications;
     private AppEntry selectedApp;
 
@@ -35,6 +38,8 @@ public class LauncharWindow: Gtk.ApplicationWindow {
         Object (application: app);
         this.app = app;
         setup ();
+
+
     }
 
     private void setup () {
@@ -42,10 +47,42 @@ public class LauncharWindow: Gtk.ApplicationWindow {
             this.set_keep_above (true);
         });
 
-        key_press_event.connect (handle_esc_return);
-
         setup_applications ();
         setup_search ();
+    }
+
+    private void auto_scroll (Gtk.Widget ? child, int prev_y) {
+        if (child is Button) {
+            Button button = (Button) child;
+            selectedApp = button.app;
+
+            int x, y;
+            button.translate_coordinates (application_grid, 0, 0, out x, out y);
+            Gtk.Allocation scroll_a, button_a;
+            application_scroll.get_allocation (out scroll_a);
+            button.get_allocation (out button_a);
+
+            if (y == prev_y) {
+                // no need to scroll;
+                return;
+            }
+            bool direction_up = false;
+
+            if (y < prev_y) {
+                direction_up = true;
+            }
+            prev_y = y;
+
+            if (y > scroll_a.height) {
+                int new_y = y - (scroll_a.height - button_a.height);
+                if (direction_up) {
+                    new_y = y;
+                }
+                application_scroll.vadjustment.value = new_y;
+            } else if (y < scroll_a.height) {
+                application_scroll.vadjustment.value = 0;
+            }
+        }
     }
 
     private bool handle_esc_return (Gdk.EventKey e) {
@@ -63,6 +100,18 @@ public class LauncharWindow: Gtk.ApplicationWindow {
     }
 
     private void setup_applications () {
+        int prev_y = 0;
+        application_grid.set_focus_child.connect ((child) => {
+            auto_scroll (child, prev_y);
+        });
+        application_grid.key_press_event.connect( (e) => {
+            if (e.keyval == Gdk.Key.Escape) {
+                search_apps.grab_focus();
+                return true;
+            }
+            return false;
+        }  );
+
         string[] dirs = Environment.get_system_data_dirs ();
         dirs += Environment.get_user_data_dir ();
         applications = get_application_buttons (dirs);
@@ -72,7 +121,9 @@ public class LauncharWindow: Gtk.ApplicationWindow {
     private void setup_search () {
         search_apps.grab_focus ();
 
+        search_apps.key_press_event.connect (handle_esc_return);
         search_apps.search_changed.connect (() => {
+            search_desc.set_text (search_apps.text);
             filter_grid (search_apps.text);
         });
     }
@@ -120,7 +171,7 @@ public class LauncharWindow: Gtk.ApplicationWindow {
                     if (s1 != s2) {
                         return s1 ? -1 : 1;
                     }
-                    if (s1 && s2){
+                    if (s1 && s2) {
                         break;
                     }
                     s1 = str[i].has_prefix (filter);
@@ -131,15 +182,12 @@ public class LauncharWindow: Gtk.ApplicationWindow {
                     if (s1 && s2) {
                         break;
                     }
-                    if (s1 && s2){
-                        break;
-                    }
                     s1 = str[i].contains (filter);
                     s2 = str[i + 1].contains (filter);
                     if (s1 != s2) {
                         return s1 ? -1 : 1;
                     }
-                    if (s1 && s2){
+                    if (s1 && s2) {
                         break;
                     }
                 }
@@ -158,11 +206,18 @@ public class LauncharWindow: Gtk.ApplicationWindow {
 
         // 12 is a decent list for the view
         for (int i =count; i < 12; i++) {
-            Gtk.Image dummy = new Gtk.Image ();
+            Gtk.Label dummy = new Gtk.Label (null);
+
+            if (i == 0) {
+                dummy.set_text ("\n\nNot found");
+            }
 
             dummy.can_focus = false;
             dummy.show ();
-            application_grid.attach (dummy, i % ICON_COLS, i / ICON_COLS);
+
+            // centralise empty placeholders when no result is found
+            int size = count == 0 ? 1 : ICON_COLS;
+            application_grid.attach (dummy, i % size, i / size);
         }
 
         // scroll back to top
