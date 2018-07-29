@@ -46,5 +46,5 @@ Configure instructions are available in [CONFIGURE.md](CONFIGURE.md).
 
 ## Donate
 
-[Bitcoin](bitcoin:1GTHYEDiy2C7RzXn5nY4wVRaEN2GvLjwZN) | [PayPal](https://paypal.me/abiosoft)
+Bitcoin:`1GTHYEDiy2C7RzXn5nY4wVRaEN2GvLjwZN` | [PayPal](https://paypal.me/abiosoft)
 
