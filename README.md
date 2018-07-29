@@ -8,6 +8,10 @@ Minimal GTK application launcher.
 * Some Linux desktops limit application launcher to primary display. Pin to a multi-screen dock (or assign it a shortcut key) and it launches on current display.
 * Alternative launcher for Tiling window managers.
 
+## Screenshot
+
+![screenshot](screenshot.png)
+
 ## Build from source
 
 ```
@@ -35,10 +39,6 @@ Fedora
 ```
 $ sudo dnf install gtk3-devel vala meson ninja-build
 ```
-
-## Screenshot
-
-![screenshot](screenshot.png)
 
 ## Donate
 
