@@ -43,7 +43,7 @@ Command=i3-msg workspace code; @s@
 ```
 
 A command to send notification before and after launching application.
-```ini
+```
 [notify]
 Desc=notify before launch
 Command=notify-send "launching @n@"; @s@; notify-send "@n@ is done"
