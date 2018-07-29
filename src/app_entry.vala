@@ -139,13 +139,14 @@ public class AppEntry {
     }
 
     private void create_button () {
+        var config = get_config ();
         Gtk.Image image = new Gtk.Image ();
 
         if (Path.is_absolute (app_icon)) {
             try{
                 Gdk.Pixbuf buf = new Gdk.Pixbuf.from_file (app_icon);
 
-                image.pixbuf = buf.scale_simple (ICON_SIZE, ICON_SIZE, Gdk.InterpType.BILINEAR);
+                image.pixbuf = buf.scale_simple (config.icon_size, config.icon_size, Gdk.InterpType.BILINEAR);
             } catch (Error e) {
                 stderr.printf ("could not load icon for %s, error: %s\n", app_name, e.message);
                 image.icon_name = app_icon;
@@ -154,7 +155,7 @@ public class AppEntry {
             image.icon_name = app_icon;
         }
 
-        image.set_pixel_size (ICON_SIZE);
+        image.set_pixel_size (config.icon_size);
 
         button = new Button (this);
 

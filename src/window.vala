@@ -81,12 +81,12 @@ public class LauncharWindow: Gtk.ApplicationWindow {
             search_desc.set_text ("");
             Instance.extension = null;
 
-            var str = search_apps.text.split(",");
-            var text = str[0].strip();
+            var str = search_apps.text.split (",");
+            var text = str[0].strip ();
 
-            if (str.length > 1){
-                var keyword = str[1].strip().down();
-                if (config.commands.has_key(keyword)){
+            if (str.length > 1) {
+                var keyword = str[1].strip ().down ();
+                if (config.commands.has_key (keyword)) {
                     var extension = config.commands[keyword];
                     search_desc.set_text (extension.description);
                     Instance.extension = extension.command;
@@ -214,7 +214,7 @@ public class LauncharWindow: Gtk.ApplicationWindow {
 
         // add to grid
         foreach (AppEntry app in matches.data) {
-            application_grid.attach (app.app_button, count % ICON_COLS, count / ICON_COLS);
+            application_grid.attach (app.app_button, count % config.cols, count / config.cols);
             count++;
             if (selectedApp == null) {
                 selectedApp = app;
@@ -233,7 +233,7 @@ public class LauncharWindow: Gtk.ApplicationWindow {
             dummy.show ();
 
             // centralise empty placeholders when no result is found
-            int size = count == 0 ? 1 : ICON_COLS;
+            int size = count == 0 ? 1 : config.cols;
             application_grid.attach (dummy, i % size, i / size);
         }
 

@@ -21,6 +21,8 @@ const string COMMAND_PLACEHOLDER = "@s@";
 
 struct Config {
     bool dark_theme;
+    int cols;
+    int icon_size;
     Map < string, Command > commands;
 }
 
@@ -30,16 +32,32 @@ class Command {
     public string command;
 }
 
+private static Config config;
+
 static Config get_config () {
-    Config c = { dark_theme: false, commands: new HashMap < string, Command > () };
+    if (config != Config ()) {
+        return config;
+    }
+    Config c = { dark_theme: false,
+                 cols: ICON_COLS,
+                 icon: ICON_SIZE,
+                 commands: new HashMap < string, Command > (), };
     try{
         KeyFile file = load_key_file ("config.ini");
-        c.dark_theme = file.get_boolean ("Config", "DarkTheme");
-        c.commands = load_commands();
+        if (file.has_key ("Config", "DarkTheme")) {
+            c.dark_theme = file.get_boolean ("Config", "DarkTheme");
+        }
+        if (file.has_key ("Config", "IconSize")) {
+            c.icon_size = file.get_integer ("Config", "IconSize");
+        }
+        if (file.has_key ("Config", "Cols")) {
+            c.cols = file.get_integer ("Config", "Cols");
+        }
+        c.commands = load_commands ();
     } catch (Error e) {
         stderr.printf ("%s\n", e.message);
     }
-    return c;
+    return (config = c);
 }
 
 static KeyFile load_key_file (string file_name) throws Error {
@@ -58,7 +76,8 @@ static Map < string, Command > load_commands () {
         KeyFile key_file = load_key_file ("commands.ini");
         string[] groups = key_file.get_groups ();
         foreach (string group in groups) {
-            Command c = new Command();
+            Command c = new Command ();
+
             c.keyword = group;
             if (!key_file.has_key (group, "Command")) {
                 stderr.printf ("command missing for %s, ignoring...", group);
@@ -69,7 +88,6 @@ static Map < string, Command > load_commands () {
                 c.description = key_file.get_locale_string (group, "Desc");
             }
             map[group] = c;
-            print("loaded "+ group);
         }
     } catch (Error e) {
         stderr.printf ("%s\n", e.message);
