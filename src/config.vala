@@ -18,6 +18,7 @@
 using Gee;
 
 const string COMMAND_PLACEHOLDER = "@s@";
+const string APP_NAME_PLACEHOLDER= "@n@";
 
 struct Config {
     bool dark_theme;

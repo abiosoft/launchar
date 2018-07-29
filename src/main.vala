@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 int main (string[] args) {
 
@@ -30,7 +30,10 @@ int main (string[] args) {
 
     // launch desktop app
     if (Instance.app != null) {
-        launch_app (Instance.app.app_exec, Instance.app.run_in_terminal, Instance.extension);
+        launch_app (Instance.app.app_name,
+                    Instance.app.app_exec,
+                    Instance.app.run_in_terminal,
+                    Instance.extension);
     }
 
     return exit;
@@ -39,5 +42,5 @@ int main (string[] args) {
 namespace Instance {
     public Gtk.ApplicationWindow window;
     public AppEntry app;
-    public string? extension;
+    public string ? extension;
 }

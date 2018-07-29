@@ -35,11 +35,29 @@ public class AppEntry {
         get { return name; }
     }
     public string app_name_wrap () {
-        string wrap = name.concat ("");
-        if (name.length > BUTTON_CHAR_WIDTH) {
-            wrap = wrap.substring (0, BUTTON_CHAR_WIDTH).concat ("...");
+        return wrap_text (name);
+    }
+
+    private string wrap_text (string text) {
+        string[] str = text.split_set (" ");
+        string[] reorder = {};
+        string line = "";
+        foreach (string s in str) {
+            if (s.strip ().length == 0) {
+                continue;
+            }
+            string concat = line.concat (" ", s);
+            if (concat.length > BUTTON_CHAR_WIDTH) {
+                reorder += line;
+                line = s;
+                continue;
+            }
+            line = concat;
         }
-        return wrap;
+        if (line != "") {
+            reorder += line;
+        }
+        return string.joinv ("\n", reorder);
     }
 
     private string search_name;
@@ -140,8 +158,8 @@ public class AppEntry {
 
     private void create_button () {
         var config = get_config ();
-        Gtk.Image image = new Gtk.Image ();
 
+        Gtk.Image image = new Gtk.Image ();
         if (Path.is_absolute (app_icon)) {
             try{
                 Gdk.Pixbuf buf = new Gdk.Pixbuf.from_file (app_icon);
@@ -154,13 +172,22 @@ public class AppEntry {
         } else {
             image.icon_name = app_icon;
         }
-
         image.set_pixel_size (config.icon_size);
+        image.show();
+
+        Gtk.Label label = new Gtk.Label(app_name_wrap());
+        label.xalign = 0.5f;
+        label.set_justify(Gtk.Justification.CENTER);
+        label.show();
+
+
+        Gtk.Box box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
+        box.pack_start(image);
+        box.pack_start(label);
+        box.show();
 
         button = new Button (this);
-
-        button.set_image (image);
-        button.set_label (app_name_wrap ());
+        button.set_image (box);
         button.set_image_position (Gtk.PositionType.TOP);
         button.relief = Gtk.ReliefStyle.NONE;
         button.always_show_image = true;
@@ -222,7 +249,7 @@ private static AppEntry get_appentry (string dir, string filename) {
     return app_entry;
 }
 
-static void launch_app (owned string exec, bool terminal, string ? extension = null) {
+static void launch_app (string name, owned string exec, bool terminal, string ? extension = null) {
     MainLoop loop = new MainLoop ();
 
     if (terminal) {
@@ -230,7 +257,8 @@ static void launch_app (owned string exec, bool terminal, string ? extension = n
         exec = string.join (" ", t.command, t.flag, exec);
     }
     if (extension != null) {
-        exec = extension.replace (COMMAND_PLACEHOLDER, exec);
+        exec = extension.replace (APP_NAME_PLACEHOLDER, name)
+                .replace (COMMAND_PLACEHOLDER, exec);
     }
 
     string[] args = new string[] { "sh", "-c", exec };
