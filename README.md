@@ -38,8 +38,6 @@ $ sudo dnf install gtk3-devel vala meson ninja-build
 
 ## Screenshot
 
-[Gif Video](demonstration.gif)
-
 ![screenshot](screenshot.png)
 
 ## Donate
