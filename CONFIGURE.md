@@ -42,14 +42,14 @@ Desc=open in 'code' workspace
 Command=i3-msg workspace code; @s@
 ```
 
-A command to send notification before launching application.
+A command to send notification before and after launching application.
 ```ini
 [notify]
 Desc=notify before launch
-Command=notify-send launching "@n@"; @s@
+Command=notify-send "launching @n@"; @s@; notify-send "@n@ is done"
 ```
 
-The command description is displayed to help ascertain which command is specified.
+The command description is displayed as you type, this can help verify the command.
 
 ![command demonstration](command.gif)
 
