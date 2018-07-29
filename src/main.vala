@@ -16,7 +16,7 @@
 
 int main (string[] args) {
 
-    var app = new Gtk.Application ("com.gitlab.abiosoft.launchar",
+    var app = new Gtk.Application ("com.github.abiosoft.launchar",
                                    ApplicationFlags.NON_UNIQUE);
 
     app.activate.connect (() => {

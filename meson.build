@@ -1,4 +1,4 @@
-project('com.gitlab.abiosoft.launchar', ['c', 'vala'],        version: '0.1.1',
+project('com.github.abiosoft.launchar', ['c', 'vala'],        version: '0.1.2',
   meson_version: '>= 0.40.0',
 )
 

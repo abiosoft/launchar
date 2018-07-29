@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/com/gitlab/abiosoft/launchar">
+  <gresource prefix="/com/github/abiosoft/launchar">
     <file>window.glade</file>
   </gresource>
 </gresources>
