@@ -49,6 +49,8 @@ Desc=notify before launch
 Command=notify-send launching "@n@"; @s@
 ```
 
+The command description is displayed to help ascertain which command is specified.
+
 ![command demonstration](command.gif)
 
 

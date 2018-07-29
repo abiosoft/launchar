@@ -40,7 +40,7 @@ Fedora
 $ sudo dnf install gtk3-devel vala meson ninja-build
 ```
 
-### Configure
+## Configure
 
 Configure instructions are available in [CONFIGURE.md](CONFIGURE.md).
 
