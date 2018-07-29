@@ -9,7 +9,7 @@ Appearance is configurable via `config.ini`.
 
 ### Defaults
 
-```ini
+```
 [Config]
 DarkTheme=false # use gtk dark theme
 IconSize=96     # icon size in pixels
@@ -23,7 +23,7 @@ launchar can be extended with configurable commands in `commands.ini`. A command
 
 Each command is an entry with the following format.
 
-```ini
+```
 [keyword]
 Desc=command description
 Command=command...
@@ -36,7 +36,7 @@ Command=command...
 ### Examples
 
 A command to lauch the current app in a custom i3 workspace.
-```ini
+```
 [code]
 Desc=open in 'code' workspace
 Command=i3-msg workspace code; @s@
