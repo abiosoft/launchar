@@ -16,7 +16,7 @@
 
 const int ICON_SIZE =96;
 const int ICON_COLS =3;
-const int BUTTON_CHAR_WIDTH=15;
+const int BUTTON_CHAR_WIDTH =15;
 
 public class AppEntry {
 
@@ -34,10 +34,10 @@ public class AppEntry {
     public string app_name {
         get { return name; }
     }
-    public string app_name_wrap() {
-        string wrap = name.concat("");
+    public string app_name_wrap () {
+        string wrap = name.concat ("");
         if (name.length > BUTTON_CHAR_WIDTH) {
-           wrap = wrap.substring(0, BUTTON_CHAR_WIDTH).concat("...");
+            wrap = wrap.substring (0, BUTTON_CHAR_WIDTH).concat ("...");
         }
         return wrap;
     }
@@ -159,7 +159,7 @@ public class AppEntry {
         button = new Button (this);
 
         button.set_image (image);
-        button.set_label (app_name_wrap());
+        button.set_label (app_name_wrap ());
         button.set_image_position (Gtk.PositionType.TOP);
         button.relief = Gtk.ReliefStyle.NONE;
         button.always_show_image = true;
@@ -221,17 +221,18 @@ private static AppEntry get_appentry (string dir, string filename) {
     return app_entry;
 }
 
-static void launch_app (owned string exec, bool terminal, string? extension = null) {
+static void launch_app (owned string exec, bool terminal, string ? extension = null) {
     MainLoop loop = new MainLoop ();
-    if (extension != null){
-        exec = extension.replace(COMMAND_PLACEHOLDER, exec);
+
+    if (terminal) {
+        Terminal t = get_term ();
+        exec = string.join (" ", t.command, t.flag, exec);
+    }
+    if (extension != null) {
+        exec = extension.replace (COMMAND_PLACEHOLDER, exec);
     }
 
     string[] args = new string[] { "sh", "-c", exec };
-    if (terminal) {
-        Terminal t = get_term ();
-        args = new string[] { t.command, t.flag, exec };
-    }
 
     try{
         Pid child_pid;
@@ -296,8 +297,8 @@ const string[] desktop_codes = {
 };
 
 public class Button: Gtk.Button {
-    public Button(AppEntry app) {
-        Object();
+    public Button (AppEntry app) {
+        Object ();
         this.app = app;
     }
     public AppEntry app;
