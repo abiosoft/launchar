@@ -64,6 +64,12 @@ public class LauncharWindow: Gtk.ApplicationWindow {
                 search_apps.grab_focus ();
                 return true;
             }
+            if (e.keyval == Gdk.Key.Up) {
+                if (top_row (selectedApp.app_button)) {
+                    search_apps.grab_focus ();
+                    return true;
+                }
+            }
             return false;
         });
 
@@ -142,9 +148,9 @@ public class LauncharWindow: Gtk.ApplicationWindow {
             }
             return true;
         case Gdk.Key.Down:
-            var first = first_entry();
-            if (first != null){
-                first.grab_focus();
+            var first = first_entry ();
+            if (first != null) {
+                first.grab_focus ();
                 return true;
             }
             break;
@@ -152,15 +158,29 @@ public class LauncharWindow: Gtk.ApplicationWindow {
         return false;
     }
 
-    Button? first_entry() {
+    Button ? first_entry () {
         var children = application_grid.get_children ();
-            if (children.length () > 0) {
-                var first = children.nth_data (children.length () - 1);
-                if (first is Button) {
+        if (children.length () > 0) {
+            var first = children.nth_data (children.length () - 1);
+            if (first is Button) {
                 return (Button) first;
-                }
             }
-            return null;
+        }
+        return null;
+    }
+
+    bool top_row (Button button) {
+        var children = application_grid.get_children ();
+        for (int i = 0; i < config.cols; i++) {
+            var b = children.nth_data (children.length () - i - 1);
+            if (!(b is Button)) {
+                return false;
+            }
+            if (button == (Button) b) {
+                return true;
+            }
+        }
+        return false;
     }
 
     void filter_grid (string ? f) {

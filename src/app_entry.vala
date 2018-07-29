@@ -20,10 +20,10 @@ const int BUTTON_CHAR_WIDTH =15;
 
 public class AppEntry {
 
-    public Gtk.Button app_button {
+    public Button app_button {
         get { return button; }
     }
-    private Gtk.Button button;
+    private Button button;
 
     public string app_icon {
         get { return icon; }
@@ -160,6 +160,7 @@ public class AppEntry {
         var config = get_config ();
 
         Gtk.Image image = new Gtk.Image ();
+
         if (Path.is_absolute (app_icon)) {
             try{
                 Gdk.Pixbuf buf = new Gdk.Pixbuf.from_file (app_icon);
@@ -173,20 +174,23 @@ public class AppEntry {
             image.icon_name = app_icon;
         }
         image.set_pixel_size (config.icon_size);
-        image.show();
+        image.show ();
 
-        Gtk.Label label = new Gtk.Label(app_name_wrap());
+        Gtk.Label label = new Gtk.Label (app_name_wrap ());
+
         label.xalign = 0.5f;
-        label.set_justify(Gtk.Justification.CENTER);
-        label.show();
+        label.set_justify (Gtk.Justification.CENTER);
+        label.show ();
 
 
-        Gtk.Box box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
-        box.pack_start(image);
-        box.pack_start(label);
-        box.show();
+        Gtk.Box box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+
+        box.pack_start (image);
+        box.pack_start (label);
+        box.show ();
 
         button = new Button (this);
+
         button.set_image (box);
         button.set_image_position (Gtk.PositionType.TOP);
         button.relief = Gtk.ReliefStyle.NONE;
