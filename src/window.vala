@@ -132,17 +132,35 @@ public class LauncharWindow: Gtk.ApplicationWindow {
     }
 
     private bool handle_esc_return (Gdk.EventKey e) {
-        if (e.keyval == Gdk.Key.Escape) {
+        switch (e.keyval) {
+        case Gdk.Key.Escape:
             app.quit ();
             return true;
-        }
-        if (e.keyval == Gdk.Key.Return) {
+        case Gdk.Key.Return:
             if (selectedApp != null) {
                 selectedApp.app_button.clicked ();
             }
             return true;
+        case Gdk.Key.Down:
+            var first = first_entry();
+            if (first != null){
+                first.grab_focus();
+                return true;
+            }
+            break;
         }
         return false;
+    }
+
+    Button? first_entry() {
+        var children = application_grid.get_children ();
+            if (children.length () > 0) {
+                var first = children.nth_data (children.length () - 1);
+                if (first is Button) {
+                return (Button) first;
+                }
+            }
+            return null;
     }
 
     void filter_grid (string ? f) {
