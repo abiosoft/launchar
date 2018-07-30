@@ -31,7 +31,7 @@ $ sudo pacman -S gtk3 vala meson ninja
 Ubuntu
 
 ```
-$ sudo apt install libgtk-3-dev valac meson ninja-build
+$ sudo apt install libgtk-3-dev libgee-0.8-dev valac meson ninja-build
 ```
 
 Fedora
