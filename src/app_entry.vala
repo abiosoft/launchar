@@ -210,8 +210,14 @@ public class AppEntry {
 
 static AppEntry[] get_application_buttons (string[] dirs) {
     GenericArray < AppEntry > apps = new GenericArray < AppEntry > ();
+    var unique_dirs = new Gee.HashMap<string, bool>();
 
     foreach (string dir in dirs) {
+        var unique_dir = Path.build_filename(dir, "nn"); // hack to get unique directory
+        if (unique_dirs.has_key(unique_dir)){
+            continue;
+        }
+        unique_dirs[unique_dir] = true;
         try {
             var d = File.new_for_path (Path.build_filename (dir, "applications"));
 

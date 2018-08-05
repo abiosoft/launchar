@@ -25,7 +25,7 @@ $ sudo ninja install
 Arch
 
 ```
-$ sudo pacman -S gtk3 vala meson ninja
+$ sudo pacman -S gtk3 vala meson ninja libgee
 ```
 
 Ubuntu
@@ -37,7 +37,7 @@ $ sudo apt install libgtk-3-dev libgee-0.8-dev valac meson ninja-build
 Fedora
 
 ```
-$ sudo dnf install gtk3-devel vala meson ninja-build
+$ sudo dnf install gtk3-devel vala meson ninja-build libgee-devel
 ```
 
 ## Configure
