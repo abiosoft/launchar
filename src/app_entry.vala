@@ -210,11 +210,11 @@ public class AppEntry {
 
 static AppEntry[] get_application_buttons (string[] dirs) {
     GenericArray < AppEntry > apps = new GenericArray < AppEntry > ();
-    var unique_dirs = new Gee.HashMap<string, bool>();
+    var unique_dirs = new Gee.HashMap < string, bool > ();
 
     foreach (string dir in dirs) {
-        var unique_dir = Path.build_filename(dir, "nn"); // hack to get unique directory
-        if (unique_dirs.has_key(unique_dir)){
+        var unique_dir = Path.build_filename (dir, "nn"); // hack to get unique directory
+        if (unique_dirs.has_key (unique_dir)) {
             continue;
         }
         unique_dirs[unique_dir] = true;
@@ -259,7 +259,7 @@ private static AppEntry get_appentry (string dir, string filename) {
     return app_entry;
 }
 
-static void launch_app (string name, owned string exec, bool terminal, string ? extension = null) {
+static void launch_app (string name, owned string exec, bool terminal, Extension ? extension = null) {
     MainLoop loop = new MainLoop ();
 
     if (terminal) {
@@ -267,10 +267,11 @@ static void launch_app (string name, owned string exec, bool terminal, string ? 
         exec = string.join (" ", t.command, t.flag, exec);
     }
     if (extension != null) {
-        exec = extension.replace (APP_NAME_PLACEHOLDER, name)
-                .replace (COMMAND_PLACEHOLDER, exec);
+        exec = extension.command.replace (APP_NAME_PLACEHOLDER, name)
+                .replace (COMMAND_PLACEHOLDER, exec)
+                .replace (ARGS_PLACEHOLDER, string.joinv (" ", extension.args));
     }
-
+    print (exec + "\n");
     string[] args = new string[] { "sh", "-c", exec };
 
     try{
@@ -341,4 +342,10 @@ public class Button: Gtk.Button {
         this.app = app;
     }
     public AppEntry app;
+}
+
+
+public struct Extension {
+    string command;
+    string[] args;
 }

@@ -42,5 +42,5 @@ int main (string[] args) {
 namespace Instance {
     public Gtk.ApplicationWindow window;
     public AppEntry app;
-    public string ? extension;
+    public Extension ? extension;
 }

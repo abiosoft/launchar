@@ -31,7 +31,7 @@ Command=command...
 
 * `keyword` - the keyword to trigger the command.
 * `Desc`    - description of what the command does.
-* `Command` - command to run. Variables `@s@` and `@n@` can be used to retrieve application command and application name respectively.
+* `Command` - command to run. Variables `@n@`, `@s@` and `@a@` can be used to retrieve application name, application command and user args respectively.
 
 ### Examples
 

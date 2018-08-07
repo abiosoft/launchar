@@ -87,15 +87,23 @@ public class LauncharWindow: Gtk.ApplicationWindow {
             search_desc.set_text ("");
             Instance.extension = null;
 
-            var str = search_apps.text.split (",");
+            var str = search_apps.text.split (",", 2);
             var text = str[0].strip ();
 
             if (str.length > 1) {
-                var keyword = str[1].strip ().down ();
+                str = str[1].split (" ");
+                var keyword = str[0].strip ().down ();
                 if (config.commands.has_key (keyword)) {
-                    var extension = config.commands[keyword];
-                    search_desc.set_text (extension.description);
-                    Instance.extension = extension.command;
+                    var command = config.commands[keyword];
+                    search_desc.set_text (command.description);
+                    var extension = Extension ();
+                    extension.command = command.command;
+                    var args = new string[] {};
+                    for (int i =1; i < str.length; i++) {
+                        args += str[i].strip ();
+                    }
+                    extension.args = args;
+                    Instance.extension = extension;
                 }
             }
 
